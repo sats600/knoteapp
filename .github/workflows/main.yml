@@ -53,21 +53,28 @@ jobs:
     needs: docker
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
-
-    - name: Modify Git Repository
-      run: |
-        git config user.email tanmay8928@gmail.com
-        git config user.name Tanmay
-        pwd
-        cat deployment.yaml
-        pwd
-        sed -i "s+tanmay238/knoteapp.*+tanmay238/knoteapp:latest+g" deployment.yaml
-        cat deployment.yaml
-        git add .
-        git commit -m 'Update image tag using GitHub Actions'
-        git push origin main
-      env:
-        GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
-        GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+      - uses: actions/checkout@v3
+        name: changing the deployment of git repo
+        with:
+          repository: 'sats600/CI-CD_Application-'
+          token: ${{ secrets.GIT_PASSWORD }}
+      - name: modify the image
+        run: |
+          git config user.email 120cs0047@iiitk.ac.in
+          git config user.name sats600
+          pwd
+          cat mongo_db_deploy.yaml
+          pwd
+          cat notes_node.yaml
+          pwd
+          sed -i "s+helloramya/images.*+helloramya/images:app-$RUN_NUMBER+g" mongo_db_deploy.yaml
+          sed -i "s+helloramya/images.*+helloramya/images:app-$RUN_NUMBER+g" notes_node.yaml
+          cat mongo_db_deploy.yaml
+	        cat notes_node.yaml
+          git add .
+          git commit -m 'Done  by Github Actions   Job changemanifest: ${{ github.run_number }}'
+          git push origin main
+        env:
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+          RUN_NUMBER: ${{ github.run_number }}
